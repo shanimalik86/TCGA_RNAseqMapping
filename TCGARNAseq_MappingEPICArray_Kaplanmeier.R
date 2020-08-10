@@ -3,15 +3,15 @@ require(data.table)
 library("survival")
 library("survminer")
 
-DMPs<-read_tsv("/Users/fazal2/Desktop/tidy_practice/B3_Case1_Genes_Beta0.4_0.05FDR.txt")
+DMPs<-read_tsv("B3_Case1_Genes_Beta0.4_0.05FDR.txt")
 head(DMPs)
-clinical<-read_tsv("/Users/fazal2/Desktop/tidy_practice/tgct_tcga_clinical_data.tsv")
+clinical<-read_tsv("tgct_tcga_clinical_data.tsv")
 colnames(clinical)<-c("ID","PID","Sample_ID","CancerType","DSF_Time","DFS_Status")
 reform_clin=reshape2::melt(clinical)
 colnames(reform_clin)<-c("ID","PID","Sample_ID","CancerType","DFS_Status","variable","Time")
 head(reform_clin)
 
-mRNA<-read_tsv("/Users/fazal2/Desktop/tidy_practice/data_RNA_Seq_v2_expression_median.txt")
+mRNA<-read_tsv("data_RNA_Seq_v2_expression_median.txt")
 reform_mRNA=reshape2::melt(mRNA)
 head(reform_mRNA)
 colnames(reform_mRNA)<-c("Gene","SampleID","expression")
@@ -63,10 +63,10 @@ expression_Clinical$event[no_event]="0"
 expression_Clinical$CancerType <- as.character(expression_Clinical$CancerType)
 expression_Clinical$CancerType[expression_Clinical$CancerType == "Non-Seminomatous Germ Cell Tumor" | expression_Clinical$CancerType == "Embryonal Carcinoma" ] <- "Non-Seminoma"
 
-write_tsv(expression_Clinical, path = "/Users/fazal2/Desktop/tidy_practice/B3_Case1_Beta0.4_0.05FDR_RNAseq_Clinical.tsv")
+write_tsv(expression_Clinical, path = "B3_Case1_Beta0.4_0.05FDR_RNAseq_Clinical.tsv")
 
 #run KM
-case <- read.table("/Users/fazal2/Desktop/tidy_practice/B3_Case1_Beta0.4_0.05FDR_RNAseq_Clinical.tsv", quote="", comment="", sep="\t", header=TRUE, na.strings=c("NA","NaN", " ", "?"))
+case <- read.table("B3_Case1_Beta0.4_0.05FDR_RNAseq_Clinical.tsv", quote="", comment="", sep="\t", header=TRUE, na.strings=c("NA","NaN", " ", "?"))
 head(case)
 fit <- survfit(Surv(case$Time, case$event) ~ case$level, data = case)
 print(fit)
